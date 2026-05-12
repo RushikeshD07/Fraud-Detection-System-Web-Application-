@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Transactions - Fraud Detection System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Transactions</h2>
+            <a href="{{ url_for('add_transaction') }}" class="btn btn-success">Add New Transaction</a>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                                <th>Location</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for txn in transactions %}
+                            <tr>
+                                <td>{{ txn.txn_id }}</td>
+                                <td>{{ txn.user_name }}</td>
+                                <td>₹{{ "%.2f"|format(txn.amount) }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if txn.txn_type == 'DEPOSIT' else 'danger' }}">
+                                        {{ txn.txn_type }}
+                                    </span>
+                                </td>
+                                <td>{{ txn.location }}</td>
+                                <td>{{ txn.txn_timestamp }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% if not transactions %}
+                <p class="text-center text-muted mt-3">No transactions found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

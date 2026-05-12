@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Fraud Alerts - Fraud Detection System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Fraud Alerts</h2>
+        
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Alert ID</th>
+                                <th>Transaction ID</th>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                                <th>Fraud Reason</th>
+                                <th>Status</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for alert in alerts %}
+                            <tr>
+                                <td>{{ alert.alert_id }}</td>
+                                <td>{{ alert.txn_id }}</td>
+                                <td>{{ alert.user_name }}</td>
+                                <td>₹{{ "%.2f"|format(alert.amount) }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if alert.txn_type == 'DEPOSIT' else 'danger' }}">
+                                        {{ alert.txn_type }}
+                                    </span>
+                                </td>
+                                <td>{{ alert.fraud_reason }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'warning' if alert.status == 'OPEN' else 'secondary' if alert.status == 'REVIEWED' else 'success' }}">
+                                        {{ alert.status }}
+                                    </span>
+                                </td>
+                                <td>{{ alert.created_at }}</td>
+                                <td>
+                                    {% if alert.status != 'RESOLVED' %}
+                                    <form method="POST" action="{{ url_for('update_alert', alert_id=alert.alert_id) }}" class="d-inline">
+                                        <select name="status" class="form-select form-select-sm d-inline" style="width: auto;">
+                                            {% if alert.status == 'OPEN' %}
+                                            <option value="REVIEWED">Mark as Reviewed</option>
+                                            <option value="RESOLVED">Mark as Resolved</option>
+                                            {% elif alert.status == 'REVIEWED' %}
+                                            <option value="RESOLVED">Mark as Resolved</option>
+                                            {% endif %}
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-outline-primary ms-1">Update</button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% if not alerts %}
+                <p class="text-center text-muted mt-3">No fraud alerts found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

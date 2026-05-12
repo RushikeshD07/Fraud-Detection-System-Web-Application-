@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Add Transaction - Fraud Detection System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>Add New Transaction</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="user_id" class="form-label">User</label>
+                        <select class="form-control" id="user_id" name="user_id" required>
+                            <option value="">Select User</option>
+                            {% for user in users %}
+                            <option value="{{ user.user_id }}">{{ user.name }} ({{ user.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="number" class="form-control" id="amount" name="amount" step="0.01" min="0.01" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="txn_type" class="form-label">Transaction Type</label>
+                        <select class="form-control" id="txn_type" name="txn_type" required>
+                            <option value="DEPOSIT">Deposit</option>
+                            <option value="WITHDRAW">Withdraw</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="location" name="location" value="Local" required>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">Add Transaction</button>
+                        <a href="{{ url_for('transactions') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
